@@ -1,3 +1,105 @@
+# 🎙️ PodcastHub
+
+A full-stack podcast platform built with NestJS and Next.js where creators can upload and manage podcasts, and listeners can discover, subscribe and enjoy content.
+
+---
+
+## 🏗️ Tech Stack
+
+### Backend
+- **NestJS** — Node.js framework
+- **PostgreSQL** — Primary database
+- **Prisma** — ORM
+- **Redis** — Caching and queues
+- **JWT** — Authentication
+- **Bull** — Background job processing
+- **Socket.io** — Real-time notifications
+
+### Frontend
+- **Next.js 15** — React framework with SSR/SSG
+- **Tailwind CSS** — Styling
+- **React Query** — Data fetching and caching
+- **NextAuth** — Authentication
+
+### DevOps
+- **Docker** — Containerization
+- **Docker Compose** — Local development
+- **GitHub Actions** — CI/CD (coming soon)
+
+---
+
+## 📁 Project Structure
+
+    podcasthub/
+    ├── backend/                  # NestJS API
+    │   ├── prisma/
+    │   │   ├── schema.prisma     # Database schema
+    │   │   └── migrations/       # Database migrations
+    │   └── src/
+    │       ├── auth/             # Authentication (register, login, JWT)
+    │       ├── users/            # User management
+    │       ├── podcasts/         # Podcast CRUD
+    │       ├── episodes/         # Episode management and audio upload
+    │       ├── comments/         # Comments and ratings
+    │       ├── notifications/    # Email and real-time notifications
+    │       ├── prisma/           # Prisma service and module
+    │       └── common/           # Shared utilities
+    │           ├── decorators/   # Custom decorators
+    │           ├── filters/      # Exception filters
+    │           ├── guards/       # Auth and role guards
+    │           ├── interceptors/ # Response interceptors
+    │           ├── pipes/        # Validation pipes
+    │           └── dto/          # Shared DTOs
+    ├── frontend/                 # Next.js App
+    │   └── src/
+    │       └── app/
+    │           ├── (auth)/       # Login, register pages
+    │           ├── podcasts/     # Browse and podcast detail
+    │           ├── dashboard/    # Creator dashboard
+    │           └── profile/      # User profile
+    ├── docker-compose.yml        # PostgreSQL and Redis
+    ├── .env                      # Root environment variables
+    └── README.md
+
+---
+
+## 🗄️ Database Schema
+
+    User
+     ├── id (UUID)
+     ├── email (unique)
+     ├── password (hashed)
+     ├── name
+     ├── role (ADMIN | CREATOR | LISTENER)
+     ├── avatar
+     └── bio
+
+    Podcast
+     ├── id (UUID)
+     ├── title
+     ├── description
+     ├── thumbnail
+     └── creatorId → User
+
+    Episode
+     ├── id (UUID)
+     ├── title
+     ├── description
+     ├── audioUrl
+     ├── duration
+     └── podcastId → Podcast
+
+    Comment
+     ├── id (UUID)
+     ├── content
+     ├── userId → User
+     └── episodeId → Episode
+
+    Like
+     ├── id (UUID)
+     ├── userId → User
+     └── episodeId → Episode
+
 ---
 
 ## 🚀 Getting Started
@@ -8,17 +110,20 @@
 - NestJS CLI (`npm install -g @nestjs/cli`)
 
 ### 1. Clone the repository
+
 ```bash
-git clone https://github.com/yourusername/podcasthub.git
+git clone https://github.com/ideepak-007/podcasthub.git
 cd podcasthub
 ```
 
 ### 2. Start the database
+
 ```bash
 docker compose up -d
 ```
 
 ### 3. Set up the backend
+
 ```bash
 cd backend
 cp ../.env .env
@@ -28,6 +133,7 @@ npm run start:dev
 ```
 
 ### 4. Set up the frontend
+
 ```bash
 cd ../frontend
 npm install
@@ -35,6 +141,7 @@ npm run dev
 ```
 
 ### 5. Access the apps
+
 | Service | URL |
 |---|---|
 | Backend API | http://localhost:3001 |
@@ -145,14 +252,14 @@ npx prisma migrate dev --name your_migration_name
 
 ## 📦 Features
 
-- [x] Project setup & Docker
-- [x] Database schema & migrations
+- [x] Project setup and Docker
+- [x] Database schema and migrations
 - [ ] Authentication (JWT)
 - [ ] Users module
 - [ ] Podcasts module
-- [ ] Episodes module + audio upload
-- [ ] Comments & likes
-- [ ] Search & pagination
+- [ ] Episodes module and audio upload
+- [ ] Comments and likes
+- [ ] Search and pagination
 - [ ] Real-time notifications
 - [ ] Frontend (Next.js)
 - [ ] Testing
@@ -162,7 +269,7 @@ npx prisma migrate dev --name your_migration_name
 
 ## 👨‍💻 Author
 
-**Deepak** — [github.com/yourusername](https://github.com/yourusername)
+**Deepak** — [github.com/ideepak-007](https://github.com/ideepak-007)
 
 ---
 
