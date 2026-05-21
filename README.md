@@ -254,7 +254,7 @@ npx prisma migrate dev --name your_migration_name
 
 - [x] Project setup and Docker
 - [x] Database schema and migrations
-- [ ] Authentication (JWT)
+- [x] Authentication (JWT)
 - [ ] Users module
 - [ ] Podcasts module
 - [ ] Episodes module and audio upload
