@@ -1,0 +1,82 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  CREATOR
+  LISTENER
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      Role     @default(LISTENER)
+  avatar    String?
+  bio       String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  podcasts  Podcast[]
+  comments  Comment[]
+  likes     Like[]
+}
+
+model Podcast {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  thumbnail   String?
+  creatorId   String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  creator  User      @relation(fields: [creatorId], references: [id])
+  episodes Episode[]
+}
+
+model Episode {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  audioUrl    String
+  duration    Int
+  podcastId   String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  podcast  Podcast   @relation(fields: [podcastId], references: [id])
+  comments Comment[]
+  likes    Like[]
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  content   String
+  userId    String
+  episodeId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user    User    @relation(fields: [userId], references: [id])
+  episode Episode @relation(fields: [episodeId], references: [id])
+}
+
+model Like {
+  id        String   @id @default(uuid())
+  userId    String
+  episodeId String
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id])
+  episode Episode @relation(fields: [episodeId], references: [id])
+
+  @@unique([userId, episodeId])
+}
