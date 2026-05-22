@@ -22,10 +22,13 @@ export class AuthService {
       throw new ConflictException('Email already in use');
     }
 
-    // Hash password
+    // Hash the password (never store plain text!)
     const hashedPassword = await bcrypt.hash(registerDto.password, 10);
+    //                                                              ↑
+    //                                                         salt rounds
+    //                                              more = more secure but slower
 
-    // Create user
+    // Save user to database
     const user = await this.prisma.user.create({
       data: {
         name: registerDto.name,
@@ -40,30 +43,36 @@ export class AuthService {
   }
 
   async login(loginDto: LoginDto) {
+    // Validate email and password
     const user = await this.validateUser(loginDto.email, loginDto.password);
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
     }
+
+    // Generate and return JWT token
     return this.generateTokens(user);
   }
 
   async validateUser(email: string, password: string) {
+    // Find user by email
     const user = await this.prisma.user.findUnique({
       where: { email },
     });
 
     if (!user) return null;
 
+    // Compare plain password with hashed password in DB
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) return null;
 
+    // Remove password from returned object (never expose it!)
     const { password: _, ...result } = user;
     return result;
   }
 
   private generateTokens(user: any) {
     const payload = {
-      sub: user.id,
+      sub: user.id, // sub = subject (standard JWT claim)
       email: user.email,
       role: user.role,
     };
